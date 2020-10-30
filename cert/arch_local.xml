@@ -1,0 +1,27 @@
+<EntityDescriptor entityID="arch_local" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIICsTCCAZkCFGl+Yrg0fJQ70TbNKwCc3TAtcBG4MA0GCSqGSIb3DQEBCwUAMBUx
+EzARBgNVBAMMCmFyY2gubG9jYWwwHhcNMjAxMDI5MjMzMTI3WhcNMzAxMDI5MjMz
+MTI3WjAVMRMwEQYDVQQDDAphcmNoLmxvY2FsMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA1g5jBvWU2dA3i4ntOWxEZzIOGXNLMHyRz2Iktd+o2xCgrsg7
+Nc2+9xcBrPhL645fGB5amikS2MKRsUAJXKtggJ0kT8x+EFUbuaARdchpEn40E1WP
+el3U4psvadPHDdunnQR2JLdnY1bCjl8soiNdshB4157Z4/HQ3Lq/NcGLUhbm7Y1Y
+3tiYZxdz3zBY50OFMhhTG6owltIe0Vb3UXzqU0K1qZ/7+h8CfQGeke+1DKgQD3m8
+RTHaM16zyqddbImXN+g4kz7Cj/qT3suELDI+VB82Khq22vJh1cUTtCSVcfZb1H2h
+ErGecpXI/LqTXM8WGYe6sc7eR5xso0iRCoW/hQIDAQABMA0GCSqGSIb3DQEBCwUA
+A4IBAQBE7N4xyolyUDu9n798TyQdDbdliqzefAcTBVs3cS/fG1rclllwpx9m3Z+B
+zdZ/MI1aAtgeWLQNK3aCSF/SivIE+9plL77nX4i3T+y8I4qVVnbbjFtL7TRs+cEY
+wA0ARl5dD5vEzDhOdjhKyBbsWXFNLADDBTQK3TLhhXSpWhoJ4uYvOyYNyOC4iltz
+lZLvONx/rXt73NWa/OSuCqf79yWUIj9T3MYSf3O0vO+24Cf665oDkOLi+kDRrWf+
++cL9i+mLq0bQclG+iWXexWpWz0CNsAcm85A5+e03odNDTN94Cj9tjL9CZqmlzIQp
+Kag9Rs8A1tEdYegOpuvbkpDwI4Yy</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://arch.local:3050/logout"/>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://arch.local:3050/postResponse" index="0"/>
+  </SPSSODescriptor>
+</EntityDescriptor>

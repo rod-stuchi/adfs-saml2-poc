@@ -1,0 +1,19 @@
+[req]
+distinguished_name = req_teste_app
+x509_extensions = v3_req
+prompt = no
+[req_teste_app]
+C = BR
+ST = SP
+L = Sao Paulo
+O = Dialog
+OU = TI
+CN = arch.local
+[v3_req]
+keyUsage = critical, digitalSignature, keyAgreement
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = www.arch.local
+DNS.2 = arch.local
+DNS.3 = arch
