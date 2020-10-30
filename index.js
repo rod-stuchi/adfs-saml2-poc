@@ -21,7 +21,6 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-
 const samlStrategy = new saml.Strategy(
   {
     entryPoint: process.env.ENTRY_POINT,
@@ -30,7 +29,7 @@ const samlStrategy = new saml.Strategy(
     identifierFormat: null,
     // authnContext: 'http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/windows',
     // Service Provider private key
-    decryptionPvk: fs.readFileSync( __dirname + "/cert/arch_local.cert", "utf8"),
+    decryptionPvk: fs.readFileSync(__dirname + "/cert/arch_local.cert", "utf8"),
     // Service Provider Certificate
     privateCert: fs.readFileSync(__dirname + "/cert/arch_local.key", "utf8"),
     // Identity Provider's public key
@@ -38,10 +37,10 @@ const samlStrategy = new saml.Strategy(
     // cert: fs.readFileSync( __dirname + "/cert/arch_local.cert", "utf8"),
     // validateInResponseTo: false,
     // disableRequestedAuthnContext: true,
-    signatureAlgorithm: 'sha256',
+    forceAuthn: true,
+    signatureAlgorithm: "sha256"
   },
   function(profile, done) {
-    console.log("🏥🏥🏥🏥", profile);
     return done(null, profile);
   }
 );
@@ -52,26 +51,46 @@ const app = express();
 
 app.use(express.json());
 app.use(cookie());
-app.use(session({
+app.use(
+  session({
     secret: "cookie_secret",
     name: "cookie_name",
     proxy: true,
-    resave: true,
+    resave: false,
     saveUninitialized: true
-}));
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
 function ensureAuthenticated(req, res, next) {
-  // console.log("🌭🌭🌭", "ensureAuthenticated");
-  // return next();
   if (req.isAuthenticated()) return next();
   else return res.redirect("/login");
 }
 
 app.get("/", ensureAuthenticated, function(req, res) {
-  console.log("⛽⛽⛽", "Authenticated");
-  res.send("Authenticated");
+  const sessionId = req.sessionID;
+  const session = JSON.parse(req.sessionStore.sessions[req.sessionID]);
+  console.log("😁😁😁😁", JSON.stringify(session, null, 2));
+  res.send(`
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Enfim vc está logado! 🙌 </h1>
+    <pre>
+    sessionID: ${sessionId}
+     username: ${session.passport.user["uname"]}
+        email: ${session.passport.user["email"]}
+    telephone: ${session.passport.user["telephone"]}
+    </pre>
+    <button onClick="document.location.replace('/logout')" style='font-size: 1.5em;'>logoff</button>
+  </body>
+  </html>
+  `);
 });
 
 app.get(
@@ -96,17 +115,12 @@ app.post(
   }
 );
 
-app.get(
-  "/logout",
-  function(req, res) {
-    samlStrategy.logout(req, (err, uri) => {
-    console.log("🍇🍇🍇🍇", "/logout", err, uri);
-      req.logout()
-      return res.redirect(uri);
-      // return res.send("Logged out");
-    })
-  }
-);
+app.get("/logout", function(req, res) {
+  console.log("🍇🍇🍇🍇", "/logout");
+  res.clearCookie("cookie_name");
+  res.redirect("/");
+});
+
 app.get("/login/fail", function(req, res) {
   console.log("🍇🍇🍇🍇", "/login/fail");
   res.status(401).send("Login failed");
@@ -120,7 +134,7 @@ app.get("/adfs", function(req, res) {
     .send(
       samlStrategy.generateServiceProviderMetadata(
         fs.readFileSync(__dirname + "/cert/arch_local.key", "utf8"),
-        fs.readFileSync(__dirname + "/cert/arch_local.cert", "utf8"),
+        fs.readFileSync(__dirname + "/cert/arch_local.cert", "utf8")
       )
     );
 });
@@ -132,18 +146,17 @@ app.use(function(err, req, res, next) {
 });
 
 const httpsOptions = {
-    // key: fs.readFileSync('./cert-arch-local/cert.key'),
-    // cert: fs.readFileSync('./cert-arch-local/cert.pem')
-    key: fs.readFileSync('./cert-arch-local/arch.local.key'),
-    cert: fs.readFileSync('./cert-arch-local/arch.local.crt')
-}
+  // key: fs.readFileSync('./cert-arch-local/cert.key'),
+  // cert: fs.readFileSync('./cert-arch-local/cert.pem')
+  key: fs.readFileSync("./cert-arch-local/arch.local.key"),
+  cert: fs.readFileSync("./cert-arch-local/arch.local.crt")
+};
 
 // var server = app.listen(3050, function() {
 //   console.log("🦂 🦂 Listening on %d", server.address().port);
 // });
 
 const port = 3050;
-const server = https.createServer(httpsOptions, app)
-    .listen(port, () => {
-        console.log('server running at ' + port)
-    })
+const server = https.createServer(httpsOptions, app).listen(port, () => {
+  console.log("server running at " + port);
+});
