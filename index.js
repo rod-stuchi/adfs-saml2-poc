@@ -35,9 +35,10 @@ const samlStrategy = new saml.Strategy(
     // Identity Provider's public key
     cert: fs.readFileSync(__dirname + "/cert/adfs-rods-local.pem", "utf8"),
     // cert: fs.readFileSync( __dirname + "/cert/arch_local.cert", "utf8"),
-    // validateInResponseTo: false,
-    // disableRequestedAuthnContext: true,
+    validateInResponseTo: false,
+    disableRequestedAuthnContext: true,
     forceAuthn: true,
+    // requestIdExpirationPeriodMs: (336 * 3600000), //14 Days / 1 Hour,
     signatureAlgorithm: "sha256"
   },
   function(profile, done) {
@@ -57,6 +58,8 @@ app.use(
     name: "cookie_name",
     proxy: true,
     resave: false,
+    // maxAge: new Date(Date.now() + (336 * 3600000)), //14 Days / 1 Hour
+    // expires: new Date(Date.now() + (336 * 3600000)), //14 Days / 1 Hour
     saveUninitialized: true
   })
 );
