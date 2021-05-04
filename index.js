@@ -149,8 +149,6 @@ app.use(function(err, req, res, next) {
 });
 
 const httpsOptions = {
-  // key: fs.readFileSync('./cert-arch-local/cert.key'),
-  // cert: fs.readFileSync('./cert-arch-local/cert.pem')
   key: fs.readFileSync("./cert-arch-local/arch.local.key"),
   cert: fs.readFileSync("./cert-arch-local/arch.local.crt")
 };
